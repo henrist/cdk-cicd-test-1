@@ -23,8 +23,8 @@ export class DemoPipelineStack extends Stack {
         actionName: "GitHub",
         output: sourceArtifact,
         oauthToken: SecretValue.secretsManager("github-token"),
-        owner: "OWNER",
-        repo: "REPO"
+        owner: "henrist",
+        repo: "cdk-cicd-test-1"
       }),
 
       // How it will be built and synthesized
