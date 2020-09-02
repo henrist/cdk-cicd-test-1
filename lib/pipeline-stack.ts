@@ -44,5 +44,11 @@ export class DemoPipelineStack extends Stack {
         env: { account: "607103741379", region: "eu-central-1" }
       })
     );
+
+    pipeline.addApplicationStage(
+      new DemoStage(this, "Prod", {
+        env: { account: "607103741379", region: "eu-west-1" }
+      })
+    );
   }
 }
