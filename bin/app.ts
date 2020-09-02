@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { App } from "@aws-cdk/core";
-import { DemoStack } from "../lib/stack";
+import { DemoPipelineStack } from "../lib/pipeline-stack";
 
 const app = new App();
 
-new DemoStack(app, "DemoPipelineStack", {
+new DemoPipelineStack(app, "DemoPipelineStack", {
   env: { account: "607103741379", region: "eu-west-1" }
 });
 
