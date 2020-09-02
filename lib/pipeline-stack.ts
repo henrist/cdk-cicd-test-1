@@ -1,7 +1,11 @@
 import * as codepipeline from "@aws-cdk/aws-codepipeline";
 import * as codepipeline_actions from "@aws-cdk/aws-codepipeline-actions";
 import { Construct, SecretValue, Stack, StackProps } from "@aws-cdk/core";
-import { CdkPipeline, SimpleSynthAction } from "@aws-cdk/pipelines";
+import {
+  CdkPipeline,
+  ShellScriptAction,
+  SimpleSynthAction
+} from "@aws-cdk/pipelines";
 import { DemoStage } from "./stage";
 
 /**
@@ -39,9 +43,22 @@ export class DemoPipelineStack extends Stack {
     });
 
     // This is where we add the application stages
-    pipeline.addApplicationStage(
-      new DemoStage(this, "PreProd", {
-        env: { account: "607103741379", region: "eu-central-1" }
+    const preprod = new DemoStage(this, "PreProd", {
+      env: { account: "607103741379", region: "eu-central-1" }
+    });
+    const preprodStage = pipeline.addApplicationStage(preprod);
+    preprodStage.addActions(
+      new ShellScriptAction({
+        actionName: "TestService",
+        useOutputs: {
+          // Get the stack Output from the Stage and make it available in
+          // the shell script as $ENDPOINT_URL.
+          ENDPOINT_URL: pipeline.stackOutput(preprod.urlOutput)
+        },
+        commands: [
+          // Use 'curl' to GET the given URL and fail if it returns an error
+          "curl -Ssf $ENDPOINT_URL"
+        ]
       })
     );
 
